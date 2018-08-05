@@ -23,11 +23,6 @@ func main() {
 
 	// look for directory
 	if(*env != "" && *dir != "") {
-		if _, err := os.Stat(fmt.Sprintf("%s/index.html", wd)); err == nil {
-			r.Handle("/", http.FileServer(http.Dir(wd)))
-			runInfo(wd, *port)
-
-		}
 		if _, err := os.Stat(fmt.Sprintf("%s/index.html", *dir)); err == nil {
 			r.Handle("/", http.FileServer(http.Dir(*dir)))
 			runInfo(wd, *port)
@@ -47,9 +42,15 @@ func main() {
 			os.Exit(1)
 		}
 	} else {
-		warn()
+		if _, err := os.Stat(fmt.Sprintf("%s/index.html", wd)); err == nil {
+			r.Handle("/", http.FileServer(http.Dir(wd)))
+			runInfo(wd, *port)
 
-		os.Exit(1)
+		} else {
+			warn()
+
+			os.Exit(1)
+		}
 	}
 
 	// serve router
