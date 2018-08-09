@@ -1,0 +1,15 @@
+# filename: config.toml
+
+[AppDir]
+index = "./"
+static = "./"
+# static = "./static"
+js = "./js"
+css = "./css"
+img = "./img"
+svg = "./svg"
+
+[server]
+port = "2030"
+
+

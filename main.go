@@ -4,13 +4,17 @@ import(
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/BurntSushi/toml"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func main() {
+
 	// get the current working directory
-	wd, _ := os.Getwd()
+	ex, _ := os.Executable()
+	wd := filepath.Dir(ex)
 
 	// set and parse directory flags
 	env := flag.String("env", "", "environment variable that correlates with the directory in which the index.html file is located")
@@ -21,16 +25,17 @@ func main() {
 	// create router
 	r := mux.NewRouter()
 
+
 	// look for directory
 	if(*env != "" && *dir != "") {
 		if _, err := os.Stat(fmt.Sprintf("%s/index.html", *dir)); err == nil {
 			r.Handle("/", http.FileServer(http.Dir(*dir)))
-			runInfo(wd, *port)
+			runInfo(*dir, *port)
 
 		}
 		if _, err := os.Stat(fmt.Sprintf("%s/index.html", *env)); err == nil {
 			r.Handle("/", http.FileServer(http.Dir(*env)))
-			runInfo(wd, *port)
+			runInfo(*env, *port)
 
 		} else {
 			fmt.Println("-------------------------------------------------------------------------------")
@@ -52,6 +57,27 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	// serve css files
+	css := http.FileServer(http.Dir("./css/"))
+	r.PathPrefix("/css/").Handler(http.StripPrefix("/css/", css))
+
+	// serve js files
+	js := http.FileServer(http.Dir("./js/"))
+	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", js))
+
+	// serve svg files
+	svg := http.FileServer(http.Dir("./svg/"))
+	r.PathPrefix("/svg/").Handler(http.StripPrefix("/svg/", svg))
+
+	// serve images
+	img := http.FileServer(http.Dir("./img/"))
+	r.PathPrefix("/img/").Handler(http.StripPrefix("/img/", img))
+
+	// serve fonts
+	font := http.FileServer(http.Dir("./font"))
+	r.PathPrefix("/fonts/").Handler(http.StripPrefix("/font/", font))
+
 
 	// serve router
 	http.ListenAndServe(fmt.Sprintf(":%s", *port), r)
