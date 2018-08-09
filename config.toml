@@ -1,15 +1,25 @@
 # filename: config.toml
 
-[AppDir]
-index = "./"
-static = "./"
-# static = "./static"
-js = "./js"
-css = "./css"
+[Static]
+dir = "."
+#dir = "./static"  -- set directory that contains static file directories
+#index = "."  -- set index directory to current working directory
+#index = "INDEX_ENV_VAR"  -- set index dir with an environment variable
+html = "./templates"  # path to html files
+#html = null
+js = "./js"  # path to js files
+#js = null -- no js files to be served
+css = "./css"  # path to css files
+#css = null
 img = "./img"
+#img = null
 svg = "./svg"
+#img = null
+
+[Routes]
+dir = "./html"  # directory where the route templates are located
+# items in the 'routes' array should correspond to their template name i.e. routes = [blog] :: blog.html
+routes = [technologies, experience, portfolio, blog, contact]
 
 [server]
 port = "2030"
-
-
