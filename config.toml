@@ -19,7 +19,7 @@ svg = "./svg"
 [Routes]
 dir = "./html"  # directory where the route templates are located
 # items in the 'routes' array should correspond to their template name i.e. routes = [blog] :: blog.html
-routes = [technologies, experience, portfolio, blog, contact]
+routes = ["technologies", "experience", "portfolio", "blog", "contact"]
 
 [server]
 port = "2030"
